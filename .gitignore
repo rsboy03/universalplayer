@@ -1,0 +1,2 @@
+# Spotify refresh tokens of linked players (server/spotify.lua): private, never commit
+spotify_tokens.json
