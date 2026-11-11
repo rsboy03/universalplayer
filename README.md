@@ -107,6 +107,14 @@ take the access back from Spotify's side as well, remove the app at spotify.com/
 access to that player's Spotify (playback, name and plan). Keep it private: never share it, upload it or commit it
 (it is in `.gitignore`). Access tokens are given only to the player they belong to, for the player in their own game.
 
+## For other resources (car screens, phone apps)
+Client exports, all checked by the server like the player's own card:
+- `exports.universalplayer:VehicleKey(vehicle)` returns the key of a car's song (`veh:<network id>`).
+- `exports.universalplayer:NowPlaying(key)` returns `{ title, artist, art, paused, volume, ... }` or `nil`.
+- `exports.universalplayer:Play(key, link)` and `exports.universalplayer:Control(key, action, data)` (`pause`,
+  `resume`, `next`, `stop`, `seek` with `data.seconds`, `volume` with `data.value` 0..1) return the server's answer.
+- Local event `universalplayer:changed` (key, view or nil) fires whenever what plays at a key changes.
+
 ## Licence
 Universal Player Licence 1.0 (`LICENSE`). In short: **free to use** on any server, including servers that earn money,
 and free to change for your own servers. **Not for sale**: do not sell it, bundle it into anything paid, re-upload it

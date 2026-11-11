@@ -20,6 +20,7 @@ const cssUrl = (u) => u ? `url("${String(u).replace(/["\\\n]/g, '')}")` : '';
 
 const REASONS = {
   empty: 'Paste a link first.', too_long: 'That link is too long.', not_link: 'That is not a link this player can play.',
+  switched_off: 'That speaker is switched off. Turn it on, then press Play.',
   youtube_off: 'YouTube links are turned off on this server.', direct_off: 'Direct links are turned off on this server.',
   host_blocked: 'Links from that site are not allowed on this server.', not_allowed: 'You are not allowed to play music here.',
   too_fast: 'Too many links in a minute. Wait a moment.', bad_target: 'You cannot play there right now.',

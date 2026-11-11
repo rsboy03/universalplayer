@@ -163,10 +163,14 @@ RegisterNetEvent('universalplayer:session', function(key, s)
         nui({ t = 'drop', key = key })
     end
     nui({ t = 'playing', key = key, playing = s and playingView(s) or nil })
+    TriggerEvent('universalplayer:changed', key, s and playingView(s) or nil)
 end)
 
+local hostPlaying = {}     -- key -> what an audio script reports for a song it plays (universalplayer:nowPlaying)
 RegisterNetEvent('universalplayer:nowPlaying', function(key, v)
+    hostPlaying[key] = v
     nui({ t = 'playing', key = key, playing = v })
+    TriggerEvent('universalplayer:changed', key, v)
 end)
 
 --[[ ------------------------------------------------------------ where each song is heard from ]]
@@ -291,4 +295,34 @@ AddEventHandler('onResourceStop', function(name)
     if name ~= RES then return end
     if open then SetNuiFocus(false, false) end
     for veh in pairs(quieted) do radio(veh, false) end
+end)
+
+--[[ ------------------------------------------------------------ for other resources (car screens, phones) ]]
+-- Client exports, so a car's own screen or a phone app can show and control what plays, the same way this player's
+-- card does. Every call goes through the server's normal checks (who may control what). Local event
+-- 'universalplayer:changed' (key, view|nil) fires whenever what plays at a key changes.
+
+--- The key of a car's song: 'veh:<network id>'.
+exports('VehicleKey', function(veh)
+    if not veh or veh == 0 or not DoesEntityExist(veh) then return nil end
+    return 'veh:' .. NetworkGetNetworkIdFromEntity(veh)
+end)
+
+--- What plays at a key right now ({ title, artist, art, paused, volume, ... }) or nil.
+exports('NowPlaying', function(key)
+    local s = sessions[key]
+    if s then return playingView(s) end
+    return hostPlaying[key]
+end)
+
+--- Plays a link at a key (a car key from VehicleKey, or the player's own). Returns the server's answer.
+exports('Play', function(key, link)
+    if type(key) ~= 'string' or type(link) ~= 'string' then return { ok = false, reason = 'bad' } end
+    return ask('universalplayer:play', key, link)
+end)
+
+--- pause | resume | next | stop | seek (data.seconds) | volume (data.value 0..1). Returns the server's answer.
+exports('Control', function(key, action, data)
+    if type(key) ~= 'string' or type(action) ~= 'string' then return { ok = false, reason = 'bad' } end
+    return ask('universalplayer:control', key, action, type(data) == 'table' and data or {})
 end)
