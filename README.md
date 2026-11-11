@@ -114,6 +114,8 @@ Client exports, all checked by the server like the player's own card:
 - `exports.universalplayer:Play(key, link)` and `exports.universalplayer:Control(key, action, data)` (`pause`,
   `resume`, `next`, `stop`, `seek` with `data.seconds`, `volume` with `data.value` 0..1) return the server's answer.
 - Local event `universalplayer:changed` (key, view or nil) fires whenever what plays at a key changes.
+- Discovery without hardcoding a name: this resource declares `music_source 'v1'` in its manifest. Scan the started
+  resources for that metadata and call the exports and `<resource>:changed` on whichever one you find.
 
 ## Licence
 Universal Player Licence 1.0 (`LICENSE`). In short: **free to use** on any server, including servers that earn money,

@@ -4,7 +4,10 @@ game 'gta5'
 
 name 'universalplayer'
 description 'Play YouTube, Spotify, mp3 and radio links in FiveM, on its own or through a supported audio script'
-version '0.1.1'
+version '0.1.2'
+-- Generic discovery key: any resource can find a music source by this metadata (GetResourceMetadata(res, 'music_source', 0))
+-- and use the exports below with the resource name it found. Nothing here is tied to one script.
+music_source 'v1'
 license 'Universal Player Licence 1.0 (free to use, not for sale or re-upload; see LICENSE)'
 
 shared_scripts {
